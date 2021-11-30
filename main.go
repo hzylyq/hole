@@ -1,38 +1,38 @@
 package main
 
 import (
-	"flag"
+	"fmt"
 	"log"
 	"os"
+	"runtime"
+
+	"github.com/urfave/cli"
+
+	"github.com/hzylyq/hole/entity"
 )
+
+var commends = []cli.Command{
+	{
+		Name:   "entity",
+		Usage:  "input entity file",
+		Action: entity.Entity,
+	},
+}
 
 const defaultEntity = ""
 const defaultServiceDir = "./"
 
 func main() {
-	entityFile := flag.String("entity", defaultEntity, "entity go file")
-	serviceDir := flag.String("service", defaultServiceDir, "service dir")
-	flag.Parse()
+	app := cli.NewApp()
+	app.Usage = "a cli tool to generate code"
+	app.Version = fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
+	app.Commands = commends
 
-	if entityFile == nil {
-		log.Fatalln("must input entity file.")
+	// cli already print error messages
+	if err := app.Run(os.Args); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
 	}
 
-	// 读取entityFile内容 解析成schema
-	curWd, err := os.Getwd()
-	if err != nil {
-		log.Fatalln("can't get current working directory: ", err)
-	}
-
-	file, err := os.Open(curWd + *entityFile)
-	if err != nil {
-		log.Fatalln("filed to read entity file")
-	}
-
-	// 解析file
-
-	log.Print(entityFile)
-	log.Print(serviceDir)
-
-	print("hello hole")
+	log.Print("gen code success")
 }
