@@ -19,8 +19,7 @@ var commends = []cli.Command{
 	},
 }
 
-const defaultEntity = ""
-const defaultServiceDir = "./"
+
 
 func main() {
 	app := cli.NewApp()
