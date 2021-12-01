@@ -1,11 +1,11 @@
 package entity
 
 import (
-	"text/template"
+	"go/parser"
+	"go/token"
+	"log"
 
 	"github.com/urfave/cli"
-
-	"github.com/hzylyq/hole/util"
 )
 
 type entityStruct struct {
@@ -24,22 +24,29 @@ type Request {
 `
 
 func Entity(ctx *cli.Context) error {
-	fileName := ctx.String("entity")
+	log.Println("run here")
+	fileName := ctx.String("o")
 	if len(fileName) == 0 {
 		panic("must input entity file")
 	}
 
-	fileByte, err := util.ReadFile(fileName)
+	f, err := parser.ParseFile(token.NewFileSet(), fileName, nil, parser.ParseComments)
 	if err != nil {
 		return err
 	}
 
-	template, err := template.New("cli").Parse(apiTemplate)
-	if err != nil {
-		return err
-	}
+	packageName := f.Name.Name
 
-	template.Parse(string(fileByte))
+	log.Println(packageName)
+
+	// 找到这个文件的package path
+
+	// template, err := template.New("cli").Parse(apiTemplate)
+	// if err != nil {
+	// 	return err
+	// }
+	//
+	// template.Parse(string(fileByte))
 
 	return nil
 }

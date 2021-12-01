@@ -1,0 +1,33 @@
+package entity
+
+import "time"
+
+type User struct {
+	ID           int64     `sql:"id"`
+	Email        string    `sql:"email"`
+	Avatar       string    `sql:"avatar"`
+	Name         string    `sql:"name"`
+	Phone        string    `sql:"phone"`
+	Password     string    `sql:"password"`
+	Company      string    `sql:"company"`
+	Title        string    `sql:"title"`
+	OpenId       string    `sql:"open_id"`
+	WxNickname   string    `sql:"wx_nickname"`
+	WxAvatar     string    `sql:"wx_avatar"`
+	IdType       int       `sql:"id_type"`
+	IndustryId   int64     `sql:"industry_id"`
+	University   string    `sql:"university"`
+	Major        string    `sql:"major"`
+	IsVerify     int       `sql:"is_verify"`
+	State        int       `sql:"state"`
+	LastAgent    string    `sql:"last_agent"`
+	Sex          int       `sql:"sex"`
+	ImAccess     string    `sql:"im_access"`
+	WorkArea     string    `sql:"work_area"`
+	Location     string    `sql:"location"`
+	IsWorkVerify int       `sql:"is_work_verify"`
+	StateAt      time.Time `sql:"state_at"`
+	CreatedAt    time.Time `sql:"created_at"`
+	UpdatedAt    time.Time `sql:"updated_at"`
+	OriginIdType int       `sql:"origin_id_type"`
+}

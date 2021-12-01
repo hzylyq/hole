@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 
 	"github.com/urfave/cli"
 
@@ -15,14 +14,20 @@ var commends = []cli.Command{
 	{
 		Name:   "entity",
 		Usage:  "input entity file",
+		Flags: []cli.Flag{
+			cli.StringFlag{
+				Name:  "o",
+				Usage: "the output api file",
+			},
+		},
 		Action: entity.Entity,
 	},
 }
 
 func main() {
 	app := cli.NewApp()
+	app.Name = "hole"
 	app.Usage = "a cli tool to generate code"
-	app.Version = fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH)
 	app.Commands = commends
 
 	// cli already print error messages
