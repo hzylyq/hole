@@ -43,17 +43,30 @@ func Entity(ctx *cli.Context) error {
 	packageName := f.Name.Name
 
 	ent.PackName = packageName
+	var structName string
 
-	ast.Inspect(f, func(x ast.Node) bool {
-		s, ok := x.(*ast.StructType)
+	ast.Inspect(f, func(n ast.Node) bool {
+		switch x := n.(type) {
+		case *ast.TypeSpec:
+			if x.Type == nil {
+				return true
+			}
+			structName = x.Name.Name
+		}
+
+		s, ok := n.(*ast.StructType)
 		if !ok {
 			return true
 		}
 
+		log.Println(structName)
+
 		for _, field := range s.Fields.List {
+
 			fmt.Printf("Field: %s\n", field.Names[0].Name)
 			fmt.Printf("Tag:   %s\n", field.Tag.Value)
 		}
+
 		return false
 	})
 
