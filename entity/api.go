@@ -2,6 +2,7 @@ package entity
 
 import (
 	"log"
+	"text/template"
 
 	"github.com/urfave/cli"
 
@@ -11,7 +12,23 @@ import (
 type entityStruct struct {
 	SchemaName string
 	Field      []string
+	hasDelete  bool
 }
+
+const apiTemplate = `
+type Request {
+  Name string ` + "`" + `path:"name,options=you|me"` + "`" + ` 
+}
+
+type Response {
+  Message string ` + "`" + `json:"message"` + "`" + `
+}
+
+service {{.name}}-api {
+  @handler {{.handler}}Handler
+  get /from/:name(Request) returns (Response)
+}
+`
 
 func Entity(ctx *cli.Context) error {
 	fileName := ctx.String("entity")
@@ -19,12 +36,17 @@ func Entity(ctx *cli.Context) error {
 		panic("must input entity file")
 	}
 
-	// todo read file gen entity
 	fileByte, err := util.ReadFile(fileName)
 	if err != nil {
 		return err
 	}
 
+	template, err := template.New("cli").Parse(apiTemplate)
+	if err != nil {
+		return err
+	}
+
+	log.Print(template)
 	log.Print(fileByte)
 
 	return nil
