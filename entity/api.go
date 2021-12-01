@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"fmt"
+	"go/ast"
 	"go/parser"
 	"go/token"
 	"log"
@@ -10,6 +12,7 @@ import (
 
 type entityStruct struct {
 	SchemaName string
+	PackName   string
 	Field      []string
 	hasDelete  bool
 }
@@ -22,6 +25,8 @@ type Request {
 	DeletedAt time.Time
 }
 `
+
+var ent entityStruct
 
 func Entity(ctx *cli.Context) error {
 	log.Println("run here")
@@ -37,16 +42,20 @@ func Entity(ctx *cli.Context) error {
 
 	packageName := f.Name.Name
 
-	log.Println(packageName)
+	ent.PackName = packageName
 
-	// 找到这个文件的package path
+	ast.Inspect(f, func(x ast.Node) bool {
+		s, ok := x.(*ast.StructType)
+		if !ok {
+			return true
+		}
 
-	// template, err := template.New("cli").Parse(apiTemplate)
-	// if err != nil {
-	// 	return err
-	// }
-	//
-	// template.Parse(string(fileByte))
+		for _, field := range s.Fields.List {
+			fmt.Printf("Field: %s\n", field.Names[0].Name)
+			fmt.Printf("Tag:   %s\n", field.Tag.Value)
+		}
+		return false
+	})
 
 	return nil
 }
