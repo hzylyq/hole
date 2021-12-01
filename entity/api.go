@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"log"
 	"text/template"
 
 	"github.com/urfave/cli"
@@ -17,16 +16,10 @@ type entityStruct struct {
 
 const apiTemplate = `
 type Request {
-  Name string ` + "`" + `path:"name,options=you|me"` + "`" + ` 
-}
-
-type Response {
-  Message string ` + "`" + `json:"message"` + "`" + `
-}
-
-service {{.name}}-api {
-  @handler {{.handler}}Handler
-  get /from/:name(Request) returns (Response)
+	Id int64
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 `
 
@@ -46,8 +39,7 @@ func Entity(ctx *cli.Context) error {
 		return err
 	}
 
-	log.Print(template)
-	log.Print(fileByte)
+	template.Parse(string(fileByte))
 
 	return nil
 }

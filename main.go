@@ -19,8 +19,6 @@ var commends = []cli.Command{
 	},
 }
 
-
-
 func main() {
 	app := cli.NewApp()
 	app.Usage = "a cli tool to generate code"
