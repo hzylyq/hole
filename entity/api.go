@@ -10,11 +10,16 @@ import (
 	"github.com/urfave/cli"
 )
 
+type Field struct {
+	Name  string
+	Value string
+}
+
 type entityStruct struct {
-	SchemaName string
-	PackName   string
-	Field      []string
-	hasDelete  bool
+	TableName string
+	PackName  string
+	Fields    []Field
+	hasDelete bool
 }
 
 const apiTemplate = `
@@ -26,8 +31,6 @@ type Request {
 }
 `
 
-var ent entityStruct
-
 func Entity(ctx *cli.Context) error {
 	log.Println("run here")
 	fileName := ctx.String("o")
@@ -35,14 +38,24 @@ func Entity(ctx *cli.Context) error {
 		panic("must input entity file")
 	}
 
-	f, err := parser.ParseFile(token.NewFileSet(), fileName, nil, parser.ParseComments)
+	ent, err := ReadEntityFromFile(fileName)
 	if err != nil {
 		return err
 	}
 
-	packageName := f.Name.Name
+	log.Print(ent)
+	return nil
+}
 
-	ent.PackName = packageName
+func ReadEntityFromFile(fileName string) (*entityStruct, error) {
+	f, err := parser.ParseFile(token.NewFileSet(), fileName, nil, parser.ParseComments)
+	if err != nil {
+		return nil, err
+	}
+
+	ent := new(entityStruct)
+
+	ent.PackName = f.Name.Name
 	var structName string
 
 	ast.Inspect(f, func(n ast.Node) bool {
@@ -59,10 +72,13 @@ func Entity(ctx *cli.Context) error {
 			return true
 		}
 
-		log.Println(structName)
+		ent.TableName = structName
 
 		for _, field := range s.Fields.List {
-
+			ent.Fields = append(ent.Fields, Field{
+				Name:  field.Names[0].Name,
+				Value: field.T,
+			})
 			fmt.Printf("Field: %s\n", field.Names[0].Name)
 			fmt.Printf("Tag:   %s\n", field.Tag.Value)
 		}
@@ -70,5 +86,5 @@ func Entity(ctx *cli.Context) error {
 		return false
 	})
 
-	return nil
+	return ent, nil
 }
