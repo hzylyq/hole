@@ -12,7 +12,7 @@ import (
 
 type Field struct {
 	Name  string
-	Value string
+	Value ast.Expr
 }
 
 type entityStruct struct {
@@ -77,7 +77,7 @@ func ReadEntityFromFile(fileName string) (*entityStruct, error) {
 		for _, field := range s.Fields.List {
 			ent.Fields = append(ent.Fields, Field{
 				Name:  field.Names[0].Name,
-				Value: field.T,
+				Value: field.Type,
 			})
 			fmt.Printf("Field: %s\n", field.Names[0].Name)
 			fmt.Printf("Tag:   %s\n", field.Tag.Value)
