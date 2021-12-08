@@ -8,15 +8,6 @@ import (
 	"github.com/hzylyq/hole/core/entity"
 )
 
-const apiTemplate = `
-type Request {
-	Id int64
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt time.Time
-}
-`
-
 func Entity(ctx *cli.Context) error {
 	log.Println("run here")
 	fileName := ctx.String("o")
