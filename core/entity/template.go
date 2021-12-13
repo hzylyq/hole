@@ -9,6 +9,6 @@ type Request {
 }
 `
 
-const repoTemplate = ``
+const repoTemplate = `package {{.packageName}}`
 
 const svcTemplate = ``

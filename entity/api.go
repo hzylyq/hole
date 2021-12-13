@@ -15,6 +15,8 @@ func Entity(ctx *cli.Context) error {
 		panic("must input entity file")
 	}
 
+	svcName := ctx.String("svc")
+
 	ent, err := entity.NewEntityFromFile(fileName)
 	if err != nil {
 		return err

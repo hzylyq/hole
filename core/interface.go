@@ -1,7 +1,7 @@
 package core
 
 type IEntity interface {
-	CreateRepo() string
-	CreateApi() string
-	CreateService() string
+	CreateRepo() (string, error)
+	CreateApi() (string, error)
+	CreateService() (string, error)
 }

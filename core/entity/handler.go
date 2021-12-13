@@ -5,6 +5,7 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"text/template"
 
 	"github.com/hzylyq/hole/core"
 )
@@ -51,14 +52,21 @@ func NewEntityFromFile(file string) (core.IEntity, error) {
 	return ent, nil
 }
 
-func (s *schema) CreateRepo() string {
-	return ""
+func (s *schema) CreateRepo() (string, error) {
+	temp, err := template.New(s.TableName).Parse(repoTemplate)
+	if err != nil {
+		return "", err
+	}
+
+	temp.Execute()
+
+	return "", nil
 }
 
-func (s *schema) CreateApi() string {
-	return ""
+func (s *schema) CreateApi() (string, error) {
+	return "", nil
 }
 
-func (s *schema) CreateService() string {
-	return ""
+func (s *schema) CreateService() (string, error) {
+	return "", nil
 }
